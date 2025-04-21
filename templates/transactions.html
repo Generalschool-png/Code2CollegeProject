@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Transactions{% endblock %}
+
+{% block content %}
+<h2>Transaction History</h2>
+<h4>Account: {{ account['account_number'] }}</h4>
+
+<div class="table-responsive mt-4">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date/Time</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trans in transactions %}
+            <tr>
+                <td>{{ trans['timestamp'] }}</td>
+                <td>{{ trans['transaction_type']|title }}</td>
+                <td class="{{ 'text-success' if trans['transaction_type'] == 'deposit' else 'text-danger' }}">
+                    ${{ "%.2f"|format(trans['amount']) }}
+                </td>
+                <td>{{ trans['description'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+{% endblock %}

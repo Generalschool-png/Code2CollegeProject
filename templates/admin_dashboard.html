@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h2>Admin Dashboard</h2>
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <h4>All Accounts</h4>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Account Number</th>
+                        <th>Owner</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for account in accounts %}
+                    <tr>
+                        <td>{{ account['account_number'] }}</td>
+                        <td>{{ account['full_name'] }}</td>
+                        <td>${{ "%.2f"|format(account['balance']) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <h4>Recent Transactions</h4>
+        <div class="list-group">
+            {% for trans in transactions %}
+            <div class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <small class="text-muted">{{ trans['timestamp'] }}</small>
+                    <span class="{{ 'text-success' if trans['transaction_type'] == 'deposit' else 'text-danger' }}">
+                        ${{ "%.2f"|format(trans['amount']) }}
+                    </span>
+                </div>
+                <p class="mb-1">{{ trans['transaction_type']|title }} - {{ trans['description'] }}</p>
+                <small>Account: {{ trans['account_number'] }} ({{ trans['full_name'] }})</small>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

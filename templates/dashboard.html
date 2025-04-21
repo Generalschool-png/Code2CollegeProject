@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2>Welcome, {{ session['full_name'] }}!</h2>
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <h4>Your Accounts</h4>
+        <div class="list-group">
+            {% for account in accounts %}
+            <div class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ account['account_number'] }}</h5>
+                    <span class="fs-5">${{ "%.2f"|format(account['balance']) }}</span>
+                </div>
+                <a href="{{ url_for('transactions', account_id=account['id']) }}" class="btn btn-sm btn-outline-primary mt-2">
+                    View Transactions
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                Quick Actions
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('deposit') }}" class="btn btn-success">Deposit</a>
+                    <a href="{{ url_for('withdraw') }}" class="btn btn-warning">Withdraw</a>
+                    <a href="{{ url_for('transfer') }}" class="btn btn-info">Transfer</a>
+                </div>
+            </div>
+        </div>
+
+        {% if transactions %}
+        <div class="card mt-3">
+            <div class="card-header">
+                Recent Transactions
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for trans in transactions %}
+                <li class="list-group-item">
+                    <small class="text-muted">{{ trans['timestamp'] }}</small><br>
+                    {{ trans['transaction_type']|title }}: ${{ "%.2f"|format(trans['amount']) }}<br>
+                    <small>{{ trans['description'] }}</small>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
